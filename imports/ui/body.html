@@ -1,0 +1,139 @@
+<head>
+    <!-------------LOGIN--GOOGLE------------------------------------------------->
+    <meta charset="UTF-8">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="393264153557-h27rmh5fng856llc8mamutkcfkti886n.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+<!-------------LOGIN--GOOGLE------------------------------------------------->
+</head>
+<body>
+
+    
+</body>
+
+<template name="register"> 
+    <h2>Register</h2>
+    <form class="user">
+        <p>Email: <input type="email" name="email"></p>
+        <p>Password: <input type="password" name="password"></p>
+        <!-- <p><input type="submit" value="Register"></p> -->
+        <button class="button" type="submit" value="Register">Registrar</button>
+    </form>
+</template>
+
+<template name="login">
+    <h2>Login</h2>
+    <form class="user">
+        <p>Email: <input type="email" name="email"></p>
+        <p>Password: <input type="password" name="password"></p>
+        <!-- <p><input type="submit" value="Login"></p>      não sei se muda algo a opcao a baixo-->
+        <button class="button" type="submit" value="Login">Login</button>
+    </form>
+
+    {{> loginGoogle}}
+</template>
+
+
+
+
+<template name="home">
+    <h1>começo</h1>
+</template>
+
+
+  <template name="main"> <!--cabeçalho e rodapé-->
+    {{> navigation}}
+    {{> bodyPrincipal}}
+    
+     <!--body-->
+    {{> yield}}
+    
+    <hr />
+    <p>Copyright &copy; Todos, 2014-2015.</p>
+</template>
+
+
+<template name="navigation"> <!--links para cabeçalho-->
+<div class="navegacao">
+  <ul>
+    <div class="botoes-menu"><li><a href="{{pathFor route='home'}}">Home</a></li></div>
+      {{#if currentUser}}
+      <div class="botoes-menu"><li><a href="#" class="logout">Logout</a></li></div>
+      {{else}}
+          <div class="botoes-menu"><li><a href="{{pathFor route='register'}}">Register</a></li></div>
+          <div class="botoes-menu"><li><a href="{{pathFor route='login'}}">Login</a></li></div>
+      {{/if}}
+  </ul>
+</div>
+</template>
+
+
+<!--------------------LISTA-->
+<template name="todos">
+    <h1>lista</h1>
+    <ul>
+    {{#each todo}}
+        <li>{{name}}</li>
+    {{/each}}
+    </ul>
+</template>
+
+<template name="addList">
+  <form>Crie uma lista:
+      <input type="text" placeholder="Nome da lista..." name="listName">
+  </form>
+</template>
+
+<!--------------------LISTA-->
+
+
+<template name="bodyPrincipal">
+         <!--login-->
+         {{#if currentUser}} <!-- se o login for válido poderá inserir tarefa -->
+         <div class="user">
+           <h1>logado</h1>
+           {{> addList}}
+           {{> todos}}
+       </div>
+         {{/if}}
+</template>
+
+
+<!--LOGIN DO GOOGLE-->
+<template name="loginGoogle">
+    <div class="user">
+        <img id="user-photo" src="https://mariovalney.com/wp-content/uploads/2015/06/user-anonimo.jpg">
+        <h1>Olá, <span id="user-name">Estudante</span> ;)</h1>
+        <p id="user-email"></p>
+    </div>
+  <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" data-width="370" data-height="50" data-longtitle="true" data-lang="pt-BR"></div> 
+
+
+
+  <script>
+    function onSignIn(response) {
+      // Conseguindo as informações do seu usuário:
+      var perfil = response.getBasicProfile();
+
+      // Conseguindo o ID do Usuário
+      var userID = perfil.getId();
+
+      // Conseguindo o Nome do Usuário
+      var userName = perfil.getName();
+
+      // Conseguindo o E-mail do Usuário
+      var userEmail = perfil.getEmail();
+
+      // Conseguindo a URL da Foto do Perfil
+      var userPicture = perfil.getImageUrl();
+
+      document.getElementById('user-photo').src = userPicture;
+      document.getElementById('user-name').innerText = userName;
+      document.getElementById('user-email').innerText = userEmail;
+
+      // Recebendo o TOKEN que você usará nas demais requisições à API:
+      var LoR = response.getAuthResponse().id_token;
+      console.log("~ le Tolkien: " + LoR);
+    };
+  </script>  
+</template>
